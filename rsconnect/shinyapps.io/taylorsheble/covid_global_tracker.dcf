@@ -1,0 +1,12 @@
+name: covid_global_tracker
+title: covid_global_tracker
+username:
+account: taylorsheble
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4194957
+bundleId: 4647595
+url: https://taylorsheble.shinyapps.io/covid_global_tracker/
+when: 1622137662.6102
+asMultiple: FALSE
+asStatic: FALSE

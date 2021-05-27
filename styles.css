@@ -1,0 +1,97 @@
+body, label, input, button, select { 
+  font-family: 'Georgia', Georgia;
+  font-weight: 200;
+}
+h1, h2, h3, h4, h5, h6, p { 
+  font-family: 'Georgia', Georgia;
+  font-weight: 200;
+}
+
+.info {
+  font-family: 'Georgia', Georgia;
+  font-weight: 200;
+}
+
+p {
+  font-size: 11pt;
+}
+
+i {
+  opacity: 0.75;
+}
+.outer {
+  color: #FFFFFF;
+}
+
+.nav-tabs {
+  border-bottom: 1px solid #333;
+  border-color: #333;
+  
+}
+  
+#mapcontrols {
+    background-color: #00000075;
+    padding: 15px 15px 15px 15px;
+    border-style: none;
+    border-radius: 15px;
+    box-shadow: 0 0 20px 5px white;
+}
+#mapcontrols {
+    background-color: #00000075;
+    padding: 15px 15px 15px 15px;
+    border-style: none;
+    border-radius: 15px;
+    box-shadow: 0 0 20px 5px white;
+}
+body {
+  font-size: 12pt;
+  background-color: #333;
+}
+
+tbody {
+  font-size: 10;
+}
+
+.form-control {
+  background-color: #ffffff;
+  font-size: 10pt;
+}
+
+.table-condennsed {
+  font-size: 12px;
+}
+
+.datepicker {
+  font-size: 10pt;
+  box-shadow: black 0 0 20px 0;
+}
+
+.radio {
+  font-size: 10pt;
+}
+.leaflet-container {
+  background: #333
+  border-color: white
+}
+
+.leaflet-popup-content p {
+    margin: 10px 0;
+}
+
+.legend {
+  color : #FFFFFF;
+  background: #00000075;
+  box-shadow: 0 0 20px 5px white;
+  margin-bottom: 100px;
+  
+}
+
+.leaflet-right {
+  margin-right: 50px;
+}
+
+.leaflet-bottom {
+  margin-bottom: 100px;
+  bottom: 75px;
+}
+
