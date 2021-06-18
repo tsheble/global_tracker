@@ -28,21 +28,44 @@ i {
   border-color: #333;
   
 }
-  
-#mapcontrols {
-    background-color: #00000075;
+
+#globalmap {
+    background-color: #1d1c1d;
     padding: 15px 15px 15px 15px;
     border-style: none;
-    border-radius: 15px;
+    border-radius: 0px;
     box-shadow: 0 0 20px 5px white;
 }
 #mapcontrols {
-    background-color: #00000075;
+    background-color: #1d1c1d;
     padding: 15px 15px 15px 15px;
     border-style: none;
-    border-radius: 15px;
+    border-radius: 0px;
     box-shadow: 0 0 20px 5px white;
 }
+
+#countrygraph {
+  background-color: #1d1c1d;
+    padding: 15px 15px 15px 15px;
+    border-style: none;
+    border-radius: 0px;
+    box-shadow: 0 0 20px 5px white;  
+}
+
+.plot-container{
+  background-color: #1d1c1d;
+  padding: 15px 15px 15px 15px;
+  border-style: none;
+  border-radius: 0px;
+}
+#graphcontrols {
+    background-color: #1d1c1d;
+    padding: 15px 15px 15px 15px;
+    border-style: none;
+    border-radius: 0px;
+    box-shadow: 0 0 20px 5px white;
+}
+
 body {
   font-size: 12pt;
   background-color: #333;
@@ -69,9 +92,10 @@ tbody {
 .radio {
   font-size: 10pt;
 }
+
 .leaflet-container {
-  background: #333
-  border-color: white
+  background: #333;
+  border-color: white;
 }
 
 .leaflet-popup-content p {

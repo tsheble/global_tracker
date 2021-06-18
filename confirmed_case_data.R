@@ -1,22 +1,28 @@
 # import
-
 if(!require(tidyverse)) install.packages("tidyverse", repos = "http://cran.us.r-project.org")
 if(!require(rnaturalearth)) install.packages("rnaturalearth", repos = "http://cran.us.r-project.org")
 if(!require(leaflet)) install.packages("leaflet", repos = "http://cran.us.r-project.org")
-# ggplot2, tibble, tidyr, readr, purrr, stringr, forecats
+if(!require(lubridate)) install.packages("lubridate", repos = "http://cran.us.r-project.org")
+if(!require(lubridate)) install.packages("lubridate", repos = "http://cran.us.r-project.org")
+if(!require(rnaturalearth)) install.packages("rnaturalearth", repos = "http://cran.us.r-project.org")
+if(!require(rnaturalearthdata)) install.packages("rnaturalearthdata", repos = "http://cran.us.r-project.org")
+if(!require(tigris)) install.packages("tigris", repos = "http://cran.us.r-project.org")
+
 
 
 # raw data  global cases (cumulative)
 
-
 cases_url <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
 global_cases_raw <- read_csv(cases_url) %>% as.data.frame()
-global_cases_raw
+
 
 format_rawdata <- function(df) {
   names(df)[1:2] = c("Province", "Country")
-  df$Country <- df$Country %>% str_remove_all("[:punct:]") %>% str_remove_all("[:space:]")
+  df$Country <- df$Country %>% str_remove_all("[:punct:]") %>% 
+    str_remove_all("[:space:]") %>% str_replace_all("KoreaSouth", "SouthKorea") 
+  
   dates <- names(global_cases_raw)[which(names(global_cases_raw)=="1/22/20"):ncol(global_cases_raw)] %>% as.Date(format = c('%m/%d/%y'))
+  
   df <- df %>%
     select(-c(1,3,4)) %>%
     group_by(Country) %>%
@@ -34,9 +40,6 @@ iso_url <-
   "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/UID_ISO_FIPS_LookUp_Table.csv" 
 iso_raw <- read_csv("UID_ISO_FIPS_LookUp_Table.csv") %>% as.data.frame()
 
-
-iso_raw %>% filter(is.na(Province_State))
-
 format_isodata <- function(df) {
   iso <- df %>% filter(is.na(Province_State))
   
@@ -44,7 +47,7 @@ format_isodata <- function(df) {
   return(iso)
 }
 iso_data <- format_isodata(iso_raw)
-iso_data[150:195,]
+
 # format cumulative case data
 global_cases_totals <- format_rawdata(global_cases_raw)
 global_cases_totals
@@ -67,7 +70,7 @@ get_newcases <- function(df) {
   
   # return data frame
   return(global_cases_new)
-  }
+}
 
 # function to calculate weekly change in cases
 get_weekcases <- function(df) {
@@ -87,11 +90,11 @@ get_weekcases <- function(df) {
 
 # calculate daily cases
 global_daily_cases <- get_newcases(global_cases_totals)
-global_daily_cases
+
 
 # calculate weekly cases
 global_week_cases <- get_weekcases(global_cases_totals)
-global_week_cases
+
 
 # format key-value total_cases
 total_cases <- global_cases_totals %>% gather(key = 'Country', value = 'total_cases', c(-Date))
@@ -115,16 +118,18 @@ population_data <- function(total, daily, weekly, iso) {
   return(pop_stat)
 }
 
+cases <- total_cases %>% full_join(daily_cases) %>%
+  right_join(weekly_cases)
+
 # calculate population statistics
 case_data <- population_data(total_cases, daily_cases, weekly_cases, iso_data)
-case_data %>% filter(Date == '2020-11-11')
-map_url <- 'https://tile.jawg.io/jawg-terrain/{z}/{x}/{y}.png?access-token=62vQTvERwUD1LC3zLk9IPmZfgayoFturP8JMkT3ID9CCEcxJkeOAeCSdZ8uGUfPu'
-case_data
-rnaturalearthdata::countries50 %>% as.data.frame() %>% filter(continent == 'North America')
-spatial_data <- rnaturalearth::ne_countries(scale = 50)
 
+map_url <- 'https://tile.jawg.io/jawg-terrain/{z}/{x}/{y}.png?access-token=62vQTvERwUD1LC3zLk9IPmZfgayoFturP8JMkT3ID9CCEcxJkeOAeCSdZ8uGUfPu'
+
+spatial_data <- rnaturalearth::ne_countries(scale = 50)
+spatial_data %>% as.data.frame() %>% head
 map_data <- tigris::geo_join(spatial_data, case_data, 'iso_a3', 'iso3')
-case_data
+
 # range for legend
 total_cases_range <- transmute(case_data %>% filter(iso3 != 'GRL'), total_case_range=total_cases/Population) %>% unique()
 total_cases_range %>% quantile(na.rm = TRUE)
@@ -132,8 +137,23 @@ daily_cases_range <- transmute(case_data, daily_case_range=daily_cases/Populatio
 daily_cases_range %>% quantile(na.rm = TRUE)
 weekly_cases_range <- transmute(case_data, week_cases_range=weekly_cases/Population) %>% unique()
 weekly_cases_range %>% quantile(na.rm = TRUE)
-#colors
+
+# map colors
 colors<-pals::linearlhot(500)[100:420]
-colors
+
+
+get_countries <- function(df) {
+  top_cases <- case_data %>% filter(Date == today()-1) %>% select(Combined_Key, total_cases) %>% arrange(desc(total_cases))
+  top_population <- case_data %>% filter(Date == today()-1) %>% select(Combined_Key, Population) %>% arrange(desc(Population))
+  country_selection <- top_cases$Combined_Key[1:25] %>% union(top_population$Combined_Key[1:25])
+  df <- case_data %>% filter(Date == today()-1) %>% filter(Combined_Key %in% country_selection)
+  return(df)
+}
+
+top_countries <- get_countries(case_data) %>% 
+  arrange(desc(Population)) %>% 
+  select(Country = Combined_Key)
+
+df <- case_data %>% filter(Combined_Key %in% top_countries$Combined_Key)
 
 

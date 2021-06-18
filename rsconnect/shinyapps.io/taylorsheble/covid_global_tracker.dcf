@@ -5,8 +5,9 @@ account: taylorsheble
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4194957
-bundleId: 4647595
+bundleId: 4712687
 url: https://taylorsheble.shinyapps.io/covid_global_tracker/
-when: 1622137662.6102
+when: 1623635175.63927
+lastSyncTime: 1623635175.63927
 asMultiple: FALSE
 asStatic: FALSE
